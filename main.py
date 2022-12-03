@@ -17,4 +17,4 @@ if __name__ == "__main__":
     print("MVCC Simulator starts")
     print("=" * 50)
     mvcc = MVCCSimulator(resources)
-    mvcc.process(queue)
+    mvcc.process(queue, is_root=True)

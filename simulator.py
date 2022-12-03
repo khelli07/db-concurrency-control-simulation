@@ -1,5 +1,4 @@
-from timestamp import Timestamp
-from utils import OpType
+from utils import OpType, Timestamp
 
 
 class TransactionSimulator:
