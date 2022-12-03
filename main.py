@@ -8,13 +8,13 @@ if __name__ == "__main__":
     queue, resources = reader.result()
 
     print("=" * 50)
-    print("OCC Simulator starts...")
+    print("OCC Simulator starts")
     print("=" * 50)
     os = OCCSimulator(resources)
     os.process(queue)
 
     print("=" * 50)
-    print("MVCC Simulator starts...")
+    print("MVCC Simulator starts")
     print("=" * 50)
     mvcc = MVCCSimulator(resources)
     mvcc.process(queue)

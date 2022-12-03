@@ -24,24 +24,24 @@ class TransactionSimulator:
             self.rw[trans.t_name][OpType.WRITE] = set()
         else:
             if op.op_type == OpType.READ:
-                self.__log_read(trans, op)
+                self._log_read(trans, op)
             elif op.op_type == OpType.WRITE:
-                self.__log_write(trans, op)
+                self._log_write(trans, op)
             elif op.op_type == OpType.VALIDATE:
-                self.__log_validate(trans, op)
+                self._log_validate(trans, op)
             elif op.op_type == OpType.COMMIT:
-                self.__log_commit(trans, op)
+                self._log_commit(trans, op)
             elif op.op_type == OpType.ROLLBACK:
-                self.__log_rollback(trans, op)
+                self._log_rollback(trans, op)
 
-    def __log_read(self, trans, op):
+    def _log_read(self, trans, op):
         tmp = self.__get_and_increment_ts()
         varname = op.args[0]
         self.logs[tmp] = (trans.t_name, OpType.READ, varname)
         self.rw[trans.t_name][OpType.READ].add(varname)
         print(f"{tmp}: Transaction {trans.t_name} reads {varname}.")
 
-    def __log_write(self, trans, op):
+    def _log_write(self, trans, op):
         tmp = self.__get_and_increment_ts()
         varname, value = op.args
         self.resources[varname] = value
@@ -49,17 +49,17 @@ class TransactionSimulator:
         self.rw[trans.t_name][OpType.WRITE].add(varname)
         print(f"{tmp}: Transaction {trans.t_name} writes {varname}.")
 
-    def __log_validate(self, trans, op):
+    def _log_validate(self, trans, op):
         tmp = self.__get_and_increment_ts()
         print(f"{tmp}: Transaction {trans.t_name} tries to validate.")
         self.logs[tmp] = (trans.t_name, OpType.VALIDATE)
 
-    def __log_commit(self, trans, op):
+    def _log_commit(self, trans, op):
         tmp = self.__get_and_increment_ts()
         print(f"{tmp}: Transaction {trans.t_name} commits.")
         self.logs[tmp] = (trans.t_name, OpType.COMMIT)
 
-    def __log_rollback(self, trans, op):
+    def _log_rollback(self, trans, op):
         tmp = self.__get_and_increment_ts()
         print(f"{tmp}: Transaction {trans.t_name} rolls back. 🔙")
         self.logs[tmp] = (trans.t_name, OpType.ROLLBACK)

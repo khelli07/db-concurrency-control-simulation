@@ -14,12 +14,11 @@ class OCCSimulator(TransactionSimulator):
             if op.op_type == OpType.VALIDATE:
                 is_valid = self.validate(trans)
                 if not is_valid:
-                    print(f"    >> Transaction {trans.t_name} is invalid. Aborting...")
+                    print(f"    >> Validation of {trans.t_name} fails. Aborting...")
                     self.log_operations(
                         trans, Operation(OpType.ROLLBACK, trans.do_rollback)
                     )
                     self.process(trans.executed_this_far)
-            
 
     def validate(self, trans):
         i = trans.ts_start
@@ -37,3 +36,7 @@ class OCCSimulator(TransactionSimulator):
             i += 1
 
         return True
+
+    def _log_commit(self, trans, op):
+        print(f"    >> Validation of {trans.t_name} success. Committing...")
+        super()._log_commit(trans, op)
