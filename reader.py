@@ -44,7 +44,7 @@ class Reader:
             tname = f"T{op[1]}"
 
             if tname not in self.trans:
-                self.trans[tname] = Transaction(tname)
+                self.trans[tname] = Transaction(tname, int(op[1]))
                 ops = Operation(OpType.START, self.trans[tname].do_start)
                 self.op_queue.append((self.trans[tname], ops))
 

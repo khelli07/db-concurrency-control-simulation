@@ -5,7 +5,7 @@ class Timestamp:
     # constructor
     def __init__(self):
         # initialize counter
-        self._counter = 0
+        self._counter = 1
         # initialize lock
         self._lock = Lock()
 

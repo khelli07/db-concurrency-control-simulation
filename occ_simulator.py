@@ -5,7 +5,7 @@ from utils import Operation, OpType
 class OCCSimulator(TransactionSimulator):
     def process(self, op_queue):
         for trans, op in op_queue:
-            self.write_history(trans, op)
+            self.log_operations(trans, op)
             if op.op_type == OpType.START:
                 op.cb(self.ts.value())
             else:
@@ -15,10 +15,11 @@ class OCCSimulator(TransactionSimulator):
                 is_valid = self.validate(trans)
                 if not is_valid:
                     print(f"    >> Transaction {trans.t_name} is invalid. Aborting...")
-                    self.write_history(
+                    self.log_operations(
                         trans, Operation(OpType.ROLLBACK, trans.do_rollback)
                     )
                     self.process(trans.executed_this_far)
+            
 
     def validate(self, trans):
         i = trans.ts_start

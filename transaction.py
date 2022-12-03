@@ -2,11 +2,11 @@ from utils import Operation, OpType
 
 
 class Transaction:
-    def __init__(self, name):
+    def __init__(self, name, ts=0):
         self.t_name = name
+        self.ts = ts
 
-    def do_start(self, begin_time):
-        print(f"Transaction {self.t_name} starts.")
+    def do_start(self, begin_time=0):
         self.ts_start = begin_time
         self.executed_this_far = []
         self.executed_this_far.append((self, Operation(OpType.START, self.do_start)))
