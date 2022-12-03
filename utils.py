@@ -7,12 +7,11 @@ class OpType(Enum):
     WRITE = 2
     VALIDATE = 3
     COMMIT = 4
-    ABORT = 5
+    ROLLBACK = 5
 
 
 class Operation:
-    def __init__(self, op_type: OpType, trans, cb, *args):
+    def __init__(self, op_type: OpType, cb, *args):
         self.op_type = op_type
-        self.trans = trans
         self.cb = cb
         self.args = args
