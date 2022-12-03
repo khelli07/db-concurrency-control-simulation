@@ -30,24 +30,25 @@ class Reader:
                 operations.append((op[0], op[1:]))
 
         f.close()
-        self.generate(num_of_trans, resources, operations)
+        self.generate(resources, operations)
 
     def generate(
         self,
-        num_of_trans: int,
         resources: dict,
-        operations: List[tuple(("op", "transaction_num", "resource"))],
+        operations: List[tuple],
     ):
-        self.trans = {
-            f"T{i + 1}": Transaction(f"T{i + 1}") for i in range(num_of_trans)
-        }
+        # self.trans = {
+        #     f"T{i + 1}": Transaction(f"T{i + 1}") for i in range(num_of_trans)
+        # }
         # self.trans_exec = {f"T{i + 1}": [] for i in range(num_of_trans)}
+        self.trans = {}
         self.resources = resources
         self.op_queue = []
         for op in operations:
             tname = f"T{op[1]}"
 
-            if self.trans_exec[tname] == []:
+            if tname not in self.trans:
+                self.trans[tname] = Transaction(tname)
                 ops = Operation(
                     OpType.START, self.trans[tname], self.trans[tname].do_start
                 )
@@ -86,4 +87,4 @@ class Reader:
             self.op_queue.append(ops)
 
     def result(self):
-        return self.op_queue, self.resources, self.trans_exec
+        return self.op_queue, self.resources

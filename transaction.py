@@ -1,4 +1,4 @@
-from utils import OpType
+from utils import Operation, OpType
 
 
 class Transaction:
@@ -12,6 +12,7 @@ class Transaction:
         config.rw[self.t_name][OpType.WRITE] = set()
         self.ts_start = config.ts.value()
         self.executed_this_far = []
+        self.executed_this_far.append(Operation(OpType.READ, self, self.do_start))
 
     def do_read(self, config, varname):
         tmp = config.ts.value()
@@ -22,7 +23,9 @@ class Transaction:
         config.rw[self.t_name][OpType.READ].add(varname)
 
         print(f"{tmp}: Transaction {self.t_name} reads {varname}.")
-        self.executed_this_far.append((OpType.READ, self, self.do_read, varname))
+        self.executed_this_far.append(
+            Operation(OpType.READ, self, self.do_read, varname)
+        )
         return tmp, value
 
     def do_write(self, config, varname, value):
@@ -34,6 +37,9 @@ class Transaction:
         config.rw[self.t_name][OpType.WRITE].add(varname)
 
         print(f"{tmp}: Transaction {self.t_name} writes {varname}.")
+        self.executed_this_far.append(
+            Operation(OpType.WRITE, self, self.do_write, varname, value)
+        )
 
     def do_validate(self, config):
         tmp = config.ts.value()
@@ -50,9 +56,13 @@ class Transaction:
                 if OpType.WRITE in config.rw[t_name_other]:
                     write = config.rw[t_name_other][OpType.WRITE]
                     if not read.isdisjoint(write):
+                        self.executed_this_far.append(
+                            Operation(OpType.VALIDATE, self, self.do_validate)
+                        )
                         print(
                             f"{tmp}: Transaction {self.t_name} is invalid. Aborting..."
                         )
+                        self.do_rollback(config)
                         return False
             i += 1
 
@@ -66,9 +76,9 @@ class Transaction:
         print(f"{tmp}: Transaction {self.t_name} commits.")
         config.logs[tmp] = (self.t_name, OpType.COMMIT)
 
-    def do_rollback(self, config, trans_exec):
-        print(f"{self.t_name} is rolling back.")
-        self.execute(config, trans_exec)
+    def do_rollback(self, config):
+        print(f"{self.t_name} rolls back.")
+        self.execute(config)
 
     def execute(self, config):
         for op in self.executed_this_far:

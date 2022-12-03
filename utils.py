@@ -1,7 +1,5 @@
 from enum import Enum
 
-from transaction import Transaction
-
 
 class OpType(Enum):
     START = 0
@@ -13,7 +11,7 @@ class OpType(Enum):
 
 
 class Operation:
-    def __init__(self, op_type: OpType, trans: Transaction, cb, *args):
+    def __init__(self, op_type: OpType, trans, cb, *args):
         self.op_type = op_type
         self.trans = trans
         self.cb = cb

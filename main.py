@@ -5,8 +5,8 @@ from reader import Reader
 if __name__ == "__main__":
     reader = Reader("test/tc1.txt")
     reader.read()
-    queue, resources, trans_exec = reader.result()
+    queue, resources = reader.result()
 
-    os = OCCSimulator(queue, trans_exec)
+    os = OCCSimulator(queue)
     conf = Config(resources)
     os.process(conf)
